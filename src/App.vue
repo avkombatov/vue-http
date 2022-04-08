@@ -11,14 +11,17 @@
         Создать человека
       </button>
     </form>
+    <app-people-list :people="people" @load="loadPeople"></app-people-list>
   </div>
 </template>
 
 <script>
+import AppPeopleList from './AppPeopleList'
 export default {
   data() {
     return {
       name: "",
+      people:[]
     };
   },
   methods: {
@@ -40,6 +43,7 @@ export default {
       this.name = ''
     },
   },
+  components:{AppPeopleList}
 };
 </script>
 
