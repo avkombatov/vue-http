@@ -16,34 +16,49 @@
 </template>
 
 <script>
-import AppPeopleList from './AppPeopleList'
+import AppPeopleList from "./AppPeopleList";
+import axios from "axios";
 export default {
   data() {
     return {
       name: "",
-      people:[]
+      people: [],
     };
   },
   methods: {
     async createPerson() {
       // https://vue-http-27323-default-rtdb.firebaseio.com/people.json
 
-     const response = await fetch("https://vue-http-27323-default-rtdb.firebaseio.com/people.json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstname: this.name,
-        }),
-      });
+      const response = await fetch(
+        "https://vue-http-27323-default-rtdb.firebaseio.com/people.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: this.name,
+          }),
+        }
+      );
 
       const firebaseData = await response.json();
       console.log(firebaseData);
-      this.name = ''
+      this.name = "";
+    },
+    async loadPeople() {
+      const { data } = await axios.get(
+        "https://vue-http-27323-default-rtdb.firebaseio.com/people.json");
+
+      this.people = Object.keys(data).map((key) => {
+        return {
+          id: key,
+          ...data[key],
+        };
+      });
     },
   },
-  components:{AppPeopleList}
+  components: { AppPeopleList },
 };
 </script>
 
