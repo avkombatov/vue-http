@@ -11,7 +11,7 @@
         Создать человека
       </button>
     </form>
-    <app-people-list :people="people" @load="loadPeople"></app-people-list>
+    <app-people-list :people="people" @load="loadPeople" @remove="removePerson"></app-people-list>
   </div>
 </template>
 
@@ -66,6 +66,10 @@ this.loadPeople();
         };
       });
     },
+    async removePerson(id){
+await axios.delete(`https://vue-http-27323-default-rtdb.firebaseio.com/people/${id}.json`)
+this.people = this.people.filter(person=> person.id != id)
+    }
   },
   components: { AppPeopleList },
 };
