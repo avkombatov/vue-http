@@ -12,7 +12,7 @@
 
 <script>
 export default {
-    emits:['load'],
+  emits:['load'],
   props: ["people"],
 };
 </script>

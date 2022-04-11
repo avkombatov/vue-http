@@ -25,6 +25,9 @@ export default {
       people: [],
     };
   },
+  mounted() {
+this.loadPeople();
+  },
   methods: {
     async createPerson() {
       // https://vue-http-27323-default-rtdb.firebaseio.com/people.json
@@ -43,12 +46,18 @@ export default {
       );
 
       const firebaseData = await response.json();
-      console.log(firebaseData);
+      this.people.push({
+        firstName: this.name,
+        id: firebaseData.name,
+      });
+      // console.log(firebaseData);
       this.name = "";
     },
+
     async loadPeople() {
       const { data } = await axios.get(
-        "https://vue-http-27323-default-rtdb.firebaseio.com/people.json");
+        "https://vue-http-27323-default-rtdb.firebaseio.com/people.json"
+      );
 
       this.people = Object.keys(data).map((key) => {
         return {
