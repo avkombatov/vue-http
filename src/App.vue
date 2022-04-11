@@ -22,14 +22,14 @@
 
 <script>
 import AppPeopleList from "./AppPeopleList";
-import AppAlert from "./AppAlert.vue"
+import AppAlert from "./AppAlert.vue";
 import axios from "axios";
 export default {
   data() {
     return {
       name: "",
       people: [],
-      alert: null
+      alert: null,
     };
   },
   mounted() {
@@ -66,8 +66,8 @@ export default {
         const { data } = await axios.get(
           "https://vue-http-27323-default-rtdb.firebaseio.com/people.json"
         );
-        if(!data){
-          throw new Error('Список людей пуст!')
+        if (!data) {
+          throw new Error("Список людей пуст!");
         }
         console.log(data);
 
@@ -79,18 +79,26 @@ export default {
         });
       } catch (e) {
         this.alert = {
-          type: 'danger',
-          title: 'Ошибка!',
-          text: e.message
-        }
+          type: "danger",
+          title: "Ошибка!",
+          text: e.message,
+        };
         console.log(e.message);
       }
     },
     async removePerson(id) {
-      await axios.delete(
-        `https://vue-http-27323-default-rtdb.firebaseio.com/people/${id}.json`
-      );
-      this.people = this.people.filter((person) => person.id != id);
+      try {
+        const name = this.people.find((person) => person.id === id).firstName;
+        await axios.delete(
+          `https://vue-http-27323-default-rtdb.firebaseio.com/people/${id}.json`
+                  );
+        this.people = this.people.filter(person=> person.id !== id)
+        this.alert = {
+          type: "primary",
+          title: "Успешно",
+          text: `Пользователь с именем "${name}" был удален!`,
+        };
+      } catch (e) {}
     },
   },
   components: { AppPeopleList, AppAlert },
