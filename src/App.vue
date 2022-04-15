@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+   
     <app-alert :alert="alert" @close="alert = null"></app-alert>
     <form action="" class="card" @submit.prevent="createPerson">
       <h2>Работа с базой данных</h2>
@@ -12,7 +13,9 @@
         Создать человека
       </button>
     </form>
+     <app-loader v-if="loading"></app-loader>
     <app-people-list
+    v-else
       :people="people"
       @load="loadPeople"
       @remove="removePerson"
@@ -23,6 +26,7 @@
 <script>
 import AppPeopleList from "./AppPeopleList";
 import AppAlert from "./AppAlert.vue";
+import AppLoader from "./AppLoader.vue"
 import axios from "axios";
 export default {
   data() {
@@ -30,6 +34,7 @@ export default {
       name: "",
       people: [],
       alert: null,
+      loading: false
     };
   },
   mounted() {
@@ -62,7 +67,9 @@ export default {
     },
 
     async loadPeople() {
+      
       try {
+        this.loading = true
         const { data } = await axios.get(
           "https://vue-http-27323-default-rtdb.firebaseio.com/people.json"
         );
@@ -77,12 +84,14 @@ export default {
             ...data[key],
           };
         });
+        this.loading = false
       } catch (e) {
         this.alert = {
           type: "danger",
           title: "Ошибка!",
           text: e.message,
         };
+        this.loading = false
         console.log(e.message);
       }
     },
@@ -101,7 +110,7 @@ export default {
       } catch (e) {}
     },
   },
-  components: { AppPeopleList, AppAlert },
+  components: { AppPeopleList, AppAlert, AppLoader },
 };
 </script>
 
